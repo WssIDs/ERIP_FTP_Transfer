@@ -1,7 +1,33 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ERIP_FTP_Transfer.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="server" Type="System.String" Scope="User">
+      <Value Profile="(Default)">178.159.242.97</Value>
+    </Setting>
+    <Setting Name="username" Type="System.String" Scope="User">
+      <Value Profile="(Default)">admin_two</Value>
+    </Setting>
+    <Setting Name="password" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ws291290</Value>
+    </Setting>
+    <Setting Name="workingpath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\</Value>
+    </Setting>
+    <Setting Name="inPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">in</Value>
+    </Setting>
+    <Setting Name="outPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">out</Value>
+    </Setting>
+    <Setting Name="UsePassivemode" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="archivepath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">archive</Value>
+    </Setting>
+    <Setting Name="Port" Type="System.String" Scope="User">
+      <Value Profile="(Default)">21</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>
