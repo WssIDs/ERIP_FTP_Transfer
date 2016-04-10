@@ -1,0 +1,37 @@
+﻿<Window x:Class="ERIP_FTP_Transfer.SettingForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ERIP_FTP_Transfer"
+        mc:Ignorable="d"
+        Title="Настройки" Height="300" Width="502.681" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Icon="logo.ico">
+    <Grid>
+        <TabControl x:Name="tabControl" Margin="10,10,10,35">
+            <TabItem Header="Основные">
+                <Grid Background="#FFE5E5E5">
+                    <Label x:Name="label" Content="Хост" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="label1" Content="Порт" HorizontalAlignment="Left" Margin="367,10,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="label2" Content="Имя пользователя" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="label3" Content="Пароль" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="textBox" Height="23" Margin="126,14,107,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="example.com"/>
+                    <TextBox x:Name="textBox1" Height="23" Margin="410,14,10,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="textBox2" Height="23" Margin="126,44,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                    <PasswordBox x:Name="passwordBox" Margin="126,75,10,0" VerticalAlignment="Top" Height="23"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Передача файлов">
+                <Grid Background="#FFE5E5E5">
+                    <Label x:Name="label4" Content="Режим передачи" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Кодировка" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="110">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+        </TabControl>
+        <Button x:Name="settingbut_close" Content="Отмена" Margin="0,0,10,10" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="settingbut_close_Click"/>
+        <Button x:Name="button1" Content="Применить" Margin="0,0,90,10" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
+        <Button x:Name="button2" Content="OK" Margin="0,0,170,10" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
+
+    </Grid>
+</Window>
