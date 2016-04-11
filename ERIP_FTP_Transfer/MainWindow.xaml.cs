@@ -25,8 +25,6 @@ using System.Net;
 using System.Diagnostics;
 using System.Data;
 
-using ERIP_FTP_Transfer.Util;
-
 namespace ERIP_FTP_Transfer
 {
     /// <summary>
@@ -430,7 +428,7 @@ namespace ERIP_FTP_Transfer
         private void dataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
         {
 
-            string[] incompfiles = Directory.GetFiles(@"C:\archiveout\");
+            string[] incompfiles = Directory.GetFiles(Properties.Settings.Default.workingpath+Properties.Settings.Default.archivepath+Properties.Settings.Default.outPath);
 
             string[] gettingfiles = new string[incompfiles.Count()];
 

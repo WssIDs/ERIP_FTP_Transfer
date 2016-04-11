@@ -12,7 +12,7 @@
       <Value Profile="(Default)">ws291290</Value>
     </Setting>
     <Setting Name="workingpath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\</Value>
+      <Value Profile="(Default)">C:\ERIP\</Value>
     </Setting>
     <Setting Name="inPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">in</Value>

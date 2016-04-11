@@ -61,7 +61,7 @@ namespace ERIP_FTP_Transfer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\ERIP\\")]
         public string workingpath {
             get {
                 return ((string)(this["workingpath"]));
