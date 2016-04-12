@@ -35,13 +35,25 @@ namespace ERIP_FTP_Transfer
         public MainWindow()
         {
             InitializeComponent();
+
+            main = this;
         }
+
+        internal static MainWindow main;
+        internal string Status
+        {
+            get { return label1.Content.ToString(); }
+            set { Dispatcher.Invoke(new Action(() => { label1.Content = value; })); }
+        }
+
+
 
         string port = Properties.Settings.Default.Port;
         string server_adr = Properties.Settings.Default.server;
         string username = Properties.Settings.Default.username;
         string password = Properties.Settings.Default.password;
         string archivefolder = Properties.Settings.Default.archivepath;
+        string workingpath = Properties.Settings.Default.workingpath;
 
 
         bool bIsDownloading = false;
@@ -81,7 +93,7 @@ namespace ERIP_FTP_Transfer
 
             }
 
-
+            //MessageBox.Show(str);
             bIsDownloading = false;
             UpdateDataGridList();
             CurrentDownloadingFile = "";
@@ -169,7 +181,7 @@ namespace ERIP_FTP_Transfer
                 reqFTP.UsePassive = true;
                 FtpWebResponse response = (FtpWebResponse)reqFTP.GetResponse();
                 Stream responseStream = response.GetResponseStream();
-                FileStream writeStream = new FileStream("C:\\"+ archivefolder + "out"+ "\\" + file, FileMode.Create);
+                FileStream writeStream = new FileStream(workingpath + archivefolder + Properties.Settings.Default.outPath + @"\" + file, FileMode.Create);
                 int Length = 4096;
                 intCount = 0;
                 int bytesRead = 0;
@@ -194,17 +206,17 @@ namespace ERIP_FTP_Transfer
 
                 filestatus = 0;
 
-                File.SetCreationTime("C:\\" + archivefolder + "out" + "\\" + file, filetime);
-                File.SetLastAccessTime("C:\\" + archivefolder + "out" + "\\" + file, filetime);
-                File.SetLastWriteTime("C:\\" + archivefolder + "out" + "\\" + file, filetime);
+                File.SetCreationTime(workingpath+ archivefolder + Properties.Settings.Default.outPath +@"\" + file, filetime);
+                File.SetLastAccessTime(workingpath + archivefolder + Properties.Settings.Default.outPath + @"\" + file, filetime);
+                File.SetLastWriteTime(workingpath + archivefolder + Properties.Settings.Default.outPath + @"\" + file, filetime);
 
-                FileInfo newfile = new FileInfo("C:\\" + archivefolder + "out" + "\\" + file);
+                FileInfo newfile = new FileInfo(workingpath + archivefolder + Properties.Settings.Default.outPath + @"\" + file);
 
                 if (newfile.Extension == ".210")
                 {
-                    if (!File.Exists(newfile.FullName))
+                    if (!File.Exists(workingpath + Properties.Settings.Default.outPath + @"\" + file))
                     {
-                        File.Copy("C:\\" + archivefolder + "out" + "\\" + file, "C:\\out" + "\\" + file);
+                        File.Copy(workingpath + archivefolder + Properties.Settings.Default.outPath + @"\" + file, workingpath + Properties.Settings.Default.outPath + @"\" + file);
                     }
                 }
 
@@ -465,6 +477,13 @@ namespace ERIP_FTP_Transfer
             settings_wnd.Owner = this;
             settings_wnd.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             settings_wnd.ShowDialog();
+        }
+
+        private void getlist_by_date_but_Click(object sender, RoutedEventArgs e)
+        {
+            SelectDateForm selectdate_wnd = new SelectDateForm();
+
+            selectdate_wnd.ShowDialog();
         }
     }
 }

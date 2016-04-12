@@ -27,6 +27,9 @@ namespace ERIP_FTP_Transfer
 
             host_box.Text = Properties.Settings.Default.server;
             port_box.Text = Properties.Settings.Default.Port;
+
+            workingpath_box.Text = Properties.Settings.Default.workingpath;
+            archivepath_box.Text = Properties.Settings.Default.archivepath;
         }
 
         private void settingbut_close_Click(object sender, RoutedEventArgs e)
@@ -48,14 +51,14 @@ namespace ERIP_FTP_Transfer
 
             else
             {
-                if (!Directory.Exists(workingpath_box.Text + Properties.Settings.Default.inPath))
+                if (!Directory.Exists(workingpath_box.Text + @"\" + Properties.Settings.Default.inPath))
                 {
-                    Directory.CreateDirectory(workingpath_box.Text + Properties.Settings.Default.inPath);
+                    Directory.CreateDirectory(workingpath_box.Text + @"\"+ Properties.Settings.Default.inPath);
                 }
 
-                if (!Directory.Exists(workingpath_box.Text + Properties.Settings.Default.outPath))
+                if (!Directory.Exists(workingpath_box.Text + @"\"+ Properties.Settings.Default.outPath))
                 {
-                    Directory.CreateDirectory(workingpath_box.Text + Properties.Settings.Default.outPath);
+                    Directory.CreateDirectory(workingpath_box.Text + @"\"+ Properties.Settings.Default.outPath);
                 }
 
 
