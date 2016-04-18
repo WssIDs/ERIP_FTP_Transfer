@@ -15,7 +15,7 @@
                 <Grid Background="#FFE5E5E5">
                     <Button x:Name="getfiles_button" Content="Загрузить файлы" Margin="0,0,10,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="148" Click="getfiles_button_Click" IsEnabled="False" Height="23"/>
                     <Button x:Name="getfilelist" Content="Получить список файлов" Margin="0,0,10,38" VerticalAlignment="Bottom" Click="getfilelist_Click" HorizontalAlignment="Right" Width="148" Height="23"/>
-                    <DataGrid x:Name="dataGrid" Margin="10,10,0,38" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False" HorizontalGridLinesBrush="#FFE8E8E8" VerticalGridLinesBrush="#FFEAEAEA" IsReadOnly="True" RowHeight="25" ColumnHeaderHeight="30" RowHeaderWidth="20" EnableRowVirtualization="False" HorizontalAlignment="Left" Width="465">
+                    <DataGrid x:Name="dataGrid" Margin="10,10,0,51" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserResizeRows="False" HorizontalGridLinesBrush="#FFE8E8E8" VerticalGridLinesBrush="#FFEAEAEA" IsReadOnly="True" RowHeight="25" ColumnHeaderHeight="30" RowHeaderWidth="20" EnableRowVirtualization="False" HorizontalAlignment="Left" Width="465">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding FileName}" Width="150"  Header="Имя файла" IsReadOnly="True" MinWidth="150">
                                 <DataGridTextColumn.CellStyle>
@@ -28,7 +28,7 @@
                             <DataGridTextColumn Binding="{Binding FileSize}" Width="auto" Header="Размер файла (КБ)" IsReadOnly="True" MinWidth="100"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Label x:Name="сurrentf_label" Content="" Margin="10,0,217,10" Height="23" VerticalAlignment="Bottom"/>
+                    <Label x:Name="сurrentf_label" Content="" Margin="10,0,217,10" Height="36" VerticalAlignment="Bottom" VerticalContentAlignment="Center"/>
                     <Button x:Name="generatefiles_but" Content="Создать" Margin="0,16,10,0" VerticalAlignment="Top" Click="generatefiles_but_Click" HorizontalAlignment="Right" Width="75"/>
                 </Grid>
             </TabItem>

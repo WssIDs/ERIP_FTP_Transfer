@@ -447,17 +447,34 @@ namespace ERIP_FTP_Transfer
 
         private void getfilelist_Click(object sender, RoutedEventArgs e)
         {
-            Thread getfiles_thread = new Thread(() => UpdateDataGridList());
-            getfiles_thread.Start();
 
+            Thread getfiles_thread = new Thread(
+            new ThreadStart(() =>
+            {
+                while (IsGettingFiles)
+                {
+                    Thread.Sleep(50);
+
+                    Dispatcher.BeginInvoke(new Action(() => UpdateDataGridList()));
+                }
+
+                Thread.Sleep(50);
+                MessageBox.Show("Операция завершена", "Системное сообщение");
+
+            }
+            ));
+            getfiles_thread.Start();
         }
 
 
+
+        bool IsGettingFiles;
 
         List<string> resultfiles = new List<string>();
 
         void UpdateDataGridList()
         {
+            IsGettingFiles = true;
             Dispatcher.BeginInvoke(new Action(() => getfilelist.IsEnabled = false));
             Dispatcher.BeginInvoke(new Action(() => dataGrid.IsEnabled = false));
             Dispatcher.BeginInvoke(new Action(() => getfiles_button.IsEnabled = false));
@@ -502,6 +519,8 @@ namespace ERIP_FTP_Transfer
                     }
                 }
 
+                IsGettingFiles = false;
+
                 Dispatcher.BeginInvoke(new Action(() => сurrentf_label.Content = "Чтение каталога: root/out/ | Статус: Операция завершена"));
 
 
@@ -511,11 +530,11 @@ namespace ERIP_FTP_Transfer
                 Dispatcher.BeginInvoke(new Action(() => dataGrid.IsEnabled = true));
                 Dispatcher.BeginInvoke(new Action(() => getfilelist.IsEnabled = true));
 
-                MessageBox.Show("Операция завершена", "Системное сообщение");
             }
 
             else
             {
+                IsGettingFiles = false;
                 MessageBox.Show("Нет файлов для загрузки","Системное сообщение");
             }
         }
@@ -593,6 +612,9 @@ namespace ERIP_FTP_Transfer
                         while (bIsDownloading)
                         {
                             Thread.Sleep(50);
+                            Dispatcher.BeginInvoke(new Action(() => dataGrid.IsEnabled = false));
+
+                            Thread.Sleep(50);
                             Dispatcher.BeginInvoke(new Action(() => getfilelist.IsEnabled = false));
 
                             Thread.Sleep(50);
@@ -602,6 +624,9 @@ namespace ERIP_FTP_Transfer
                             Dispatcher.BeginInvoke(new Action(() => statusoperation.Content = ""));
 
                         }
+
+                        Thread.Sleep(50);
+                        Dispatcher.BeginInvoke(new Action(() => dataGrid.IsEnabled = true));
 
                         Thread.Sleep(50);
                         Dispatcher.BeginInvoke(new Action(() => getfilelist.IsEnabled = true));

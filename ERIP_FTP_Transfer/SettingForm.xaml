@@ -7,38 +7,35 @@
         mc:Ignorable="d"
         Title="Настройки" Height="300" Width="502.681" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Icon="logo.ico">
     <Grid>
-        <TabControl x:Name="tabControl" Margin="10,10,10,35">
+        <TabControl x:Name="tabControl" Margin="5,5,5,35">
             <TabItem Header="Основные">
-                <Grid Background="#FFE5E5E5">
-                    <Label x:Name="label" Content="Хост" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                    <Label x:Name="label1" Content="Порт" HorizontalAlignment="Left" Margin="367,10,0,0" VerticalAlignment="Top"/>
+                <Grid>
+                    <Label x:Name="label" Content="Хост" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="111"/>
+                    <Label x:Name="label1" Content="Порт" Margin="357,10,76,0" VerticalAlignment="Top" Height="26"/>
                     <Label x:Name="label2" Content="Имя пользователя" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
-                    <Label x:Name="label3" Content="Пароль" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="host_box" Height="23" Margin="126,14,107,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="example.com"/>
-                    <TextBox x:Name="port_box" Height="23" Margin="410,14,10,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top"/>
-                    <TextBox x:Name="username_box" Height="23" Margin="126,44,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
-                    <PasswordBox x:Name="password_box" Margin="126,75,10,0" VerticalAlignment="Top" Height="23"/>
+                    <Label x:Name="label3" Content="Пароль" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top" Width="111"/>
+                    <TextBox x:Name="host_box" Height="22" Margin="126,12,129,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="example.com"/>
+                    <TextBox x:Name="port_box" Height="23" Margin="410,12,10,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="username_box" Height="23" Margin="126,43,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                    <PasswordBox x:Name="password_box" Margin="126,74,10,0" VerticalAlignment="Top" Height="22"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Передача файлов">
-                <Grid Background="#FFE5E5E5">
-                    <Label x:Name="label5" Content="Рабочая папка" HorizontalAlignment="Left" Margin="10,28,0,0" VerticalAlignment="Top"/>
+                <Grid>
+                    <Label x:Name="label5" Content="Рабочая папка" HorizontalAlignment="Left" Margin="10,25,0,0" VerticalAlignment="Top"/>
                     <TextBox x:Name="workingpath_box" Height="23" Margin="104,28,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
-                    <Label x:Name="label6" Content="Архив" HorizontalAlignment="Left" Margin="10,82,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="label6" Content="Архив" HorizontalAlignment="Left" Margin="10,79,0,0" VerticalAlignment="Top"/>
                     <TextBox x:Name="archivepath_box" Height="23" Margin="104,82,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
-                    <Label x:Name="label7" Content="к имени этой папки в конце буду добавлены префиксы (in и out)" HorizontalAlignment="Left" Margin="104,110,0,0" VerticalAlignment="Top" FontSize="9"/>
+                    <Label x:Name="label7" Content="к имени этой папки в конце буду добавлены префиксы (in и out)" HorizontalAlignment="Left" Margin="104,109,0,0" VerticalAlignment="Top" FontSize="9"/>
                     <CheckBox x:Name="mode_box" Content="Пассивный режим" HorizontalAlignment="Left" Margin="104,10,0,0" VerticalAlignment="Top"/>
-                    <Label x:Name="label7_Copy" Content="если папка не существует, то она будет создана" HorizontalAlignment="Left" Margin="104,56,0,0" VerticalAlignment="Top" FontSize="9"/>
+                    <Label x:Name="label7_Copy" Content="Указывается существующая папка. Пример ( С:\root\ )" HorizontalAlignment="Left" Margin="104,56,0,0" VerticalAlignment="Top" FontSize="9"/>
                     <CheckBox x:Name="delete_box" Content="Удалять файлы с сервера после копирования" HorizontalAlignment="Left" Margin="104,136,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Кодировка" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="110">
-                <Grid Background="#FFE5E5E5"/>
-            </TabItem>
         </TabControl>
-        <Button x:Name="settingbut_close" Content="Отмена" Margin="0,0,10,10" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="settingbut_close_Click"/>
-        <Button x:Name="button1" Content="Применить" Margin="0,0,90,10" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
-        <Button x:Name="ok_button" Content="OK" Margin="0,0,170,10" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="ok_button_Click"/>
+        <Button x:Name="cancel_button" Content="Отмена" Margin="0,0,5,10" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="cancel_button_Click"/>
+        <Button x:Name="accept_button" Content="Применить" Margin="0,0,85,10" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="accept_button_Click"/>
+        <Button x:Name="ok_button" Content="OK" Margin="0,0,165,10" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Click="ok_button_Click"/>
 
     </Grid>
 </Window>
