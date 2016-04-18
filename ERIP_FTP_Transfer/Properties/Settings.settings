@@ -29,5 +29,11 @@
     <Setting Name="Port" Type="System.String" Scope="User">
       <Value Profile="(Default)">21</Value>
     </Setting>
+    <Setting Name="eripresultpath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">204</Value>
+    </Setting>
+    <Setting Name="bDeleteFiles" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

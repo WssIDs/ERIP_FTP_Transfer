@@ -130,5 +130,29 @@ namespace ERIP_FTP_Transfer.Properties {
                 this["Port"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("204")]
+        public string eripresultpath {
+            get {
+                return ((string)(this["eripresultpath"]));
+            }
+            set {
+                this["eripresultpath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool bDeleteFiles {
+            get {
+                return ((bool)(this["bDeleteFiles"]));
+            }
+            set {
+                this["bDeleteFiles"] = value;
+            }
+        }
     }
 }

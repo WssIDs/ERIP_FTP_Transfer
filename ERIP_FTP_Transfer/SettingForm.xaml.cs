@@ -30,6 +30,8 @@ namespace ERIP_FTP_Transfer
 
             workingpath_box.Text = Properties.Settings.Default.workingpath;
             archivepath_box.Text = Properties.Settings.Default.archivepath;
+
+            delete_box.IsChecked = Properties.Settings.Default.bDeleteFiles;
         }
 
         private void settingbut_close_Click(object sender, RoutedEventArgs e)
@@ -70,6 +72,11 @@ namespace ERIP_FTP_Transfer
                 if (!Directory.Exists(workingpath_box.Text + archivepath_box.Text + Properties.Settings.Default.outPath))
                 {
                     Directory.CreateDirectory(workingpath_box.Text + archivepath_box.Text + Properties.Settings.Default.outPath);
+                }
+
+                if (!Directory.Exists(workingpath_box.Text + archivepath_box.Text + Properties.Settings.Default.outPath + @"\" + Properties.Settings.Default.eripresultpath))
+                {
+                    Directory.CreateDirectory(workingpath_box.Text + archivepath_box.Text + Properties.Settings.Default.outPath + @"\" + Properties.Settings.Default.eripresultpath);
                 }
             }
         }

@@ -35,18 +35,7 @@ namespace ERIP_FTP_Transfer
         public MainWindow()
         {
             InitializeComponent();
-
-            main = this;
         }
-
-        internal static MainWindow main;
-        internal string Status
-        {
-            get { return label1.Content.ToString(); }
-            set { Dispatcher.Invoke(new Action(() => { label1.Content = value; })); }
-        }
-
-
 
         string port = Properties.Settings.Default.Port;
         string server_adr = Properties.Settings.Default.server;
@@ -87,6 +76,14 @@ namespace ERIP_FTP_Transfer
                     DownloadFile(file);
 
                     fileindex ++;
+
+                    if (Properties.Settings.Default.bDeleteFiles)
+                    {
+                        if (extension == ".210")
+                        {
+                            DeleteFile(file);
+                        }
+                    }
                 }
 
 
@@ -99,6 +96,27 @@ namespace ERIP_FTP_Transfer
             CurrentDownloadingFile = "";
             fileindex = 0;
             filescount = 0;
+        }
+
+
+        void downloadResultfiles(string[] files)
+        {
+
+            foreach (string file in files)
+            {
+                string extension = System.IO.Path.GetExtension(file);
+
+                if (extension == "")
+                {
+                }
+                else
+                {
+                    if (extension == ".204")
+                    {
+                        DownloadResultFile(file);
+                    }
+                }
+            }
         }
 
         public string[] GetFileList()
@@ -240,6 +258,117 @@ namespace ERIP_FTP_Transfer
 
         }
 
+
+        void DownloadResultFile(string file)
+        {
+
+
+            try
+            {
+                string uri = "ftp://" + server_adr + "/" + "out" + "/" + file;
+                Uri serverUri = new Uri(uri);
+                if (serverUri.Scheme != Uri.UriSchemeFtp)
+                {
+                    return;
+                }
+                FtpWebRequest reqFTP;
+
+                long filesize = GetFileSize(file);
+
+                DateTime filetime = GetFileTimestamp(file);
+
+                reqFTP = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + server_adr + ":" + port + "/" + "out" + "/" + file));
+                reqFTP.Credentials = new NetworkCredential(username, password);
+                reqFTP.KeepAlive = false;
+                reqFTP.Method = WebRequestMethods.Ftp.DownloadFile;
+                reqFTP.UseBinary = true;
+                reqFTP.Proxy = null;
+                reqFTP.UsePassive = true;
+                FtpWebResponse response = (FtpWebResponse)reqFTP.GetResponse();
+                Stream responseStream = response.GetResponseStream();
+                FileStream writeStream = new FileStream(workingpath + archivefolder + Properties.Settings.Default.outPath + @"\" + Properties.Settings.Default.eripresultpath + @"\" + file, FileMode.Create);
+                int Length = 4096;
+                intCount = 0;
+                int bytesRead = 0;
+                Byte[] buffer = new Byte[Length];
+                bytesRead = responseStream.Read(buffer, 0, Length);
+
+                while (bytesRead > 0)
+                {
+
+                    intCount += bytesRead;
+                    writeStream.Write(buffer, 0, bytesRead);
+                    string test = "Скопировано с ftp-сервера - " + ((long)(intCount * 100 / filesize)).ToString() + "%";
+                    int status = ((int)(intCount * 100 / filesize));
+
+                    bytesRead = responseStream.Read(buffer, 0, Length);
+
+                }
+                writeStream.Close();
+                response.Close();
+
+                File.SetCreationTime(workingpath + archivefolder + Properties.Settings.Default.outPath + @"\" + Properties.Settings.Default.eripresultpath + @"\" + file, filetime);
+                File.SetLastAccessTime(workingpath + archivefolder + Properties.Settings.Default.outPath + @"\" + Properties.Settings.Default.eripresultpath + @"\" + file, filetime);
+                File.SetLastWriteTime(workingpath + archivefolder + Properties.Settings.Default.outPath + @"\" + Properties.Settings.Default.eripresultpath + @"\" + file, filetime);
+
+            }
+            catch (WebException wEx)
+            {
+                MessageBox.Show(wEx.Message, "Download Error");
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Download Error");
+
+            }
+
+
+
+        }
+
+
+
+        void DeleteFile(string file)
+        {
+            try
+            {
+                string uri = "ftp://" + server_adr + "/" + "out" + "/" + file;
+                Uri serverUri = new Uri(uri);
+                if (serverUri.Scheme != Uri.UriSchemeFtp)
+                {
+                    return;
+                }
+                FtpWebRequest reqFTP;
+
+                reqFTP = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + server_adr + ":" + port + "/" + "out" + "/" + file));
+                reqFTP.Credentials = new NetworkCredential(username, password);
+                reqFTP.KeepAlive = false;
+                reqFTP.Method = WebRequestMethods.Ftp.DeleteFile;
+                reqFTP.UseBinary = true;
+                reqFTP.Proxy = null;
+                reqFTP.UsePassive = true;
+                FtpWebResponse response = (FtpWebResponse)reqFTP.GetResponse();
+
+                response.Close();
+
+            }
+            catch (WebException wEx)
+            {
+                MessageBox.Show(wEx.Message, "Delete Error");
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Delete Error");
+
+            }
+
+
+
+        }
+
+
         int processProgress(int invalue)
         {
            // Trace.WriteLine(invalue);
@@ -318,36 +447,76 @@ namespace ERIP_FTP_Transfer
 
         private void getfilelist_Click(object sender, RoutedEventArgs e)
         {
-            UpdateDataGridList();
+            Thread getfiles_thread = new Thread(() => UpdateDataGridList());
+            getfiles_thread.Start();
+
         }
 
 
 
+        List<string> resultfiles = new List<string>();
+
         void UpdateDataGridList()
         {
+            Dispatcher.BeginInvoke(new Action(() => getfilelist.IsEnabled = false));
+            Dispatcher.BeginInvoke(new Action(() => dataGrid.IsEnabled = false));
+            Dispatcher.BeginInvoke(new Action(() => getfiles_button.IsEnabled = false));
 
-            string[] files = GetFileList();
+            List<string> resultfilesdir = (Directory.GetFiles(workingpath + archivefolder + Properties.Settings.Default.outPath + @"\" + Properties.Settings.Default.eripresultpath + @"\")).ToList<string>();
+
+            List<string> tempresultfiles = new List<string>();
+
+            List<string> files = GetFileList().ToList<string>();
 
             if (files != null)
             {
-
-                Dispatcher.BeginInvoke(new Action(() => getfiles_button.IsEnabled = true));
-
                 ObservableCollection<FTPFileInfo> items = new ObservableCollection<FTPFileInfo>();
+
+                int i = 0;
+                int j = 0;
 
                 foreach (string file in files)
                 {
                     string extension = System.IO.Path.GetExtension(file);
-                    if (extension == ".204" || extension == ".210")
+                    if (extension == ".210")
                     {
+
+                        Dispatcher.BeginInvoke(new Action(() => сurrentf_label.Content = "Чтение каталога: root/out/ | Статус: Чтение файла - " + file));
                         items.Add(new FTPFileInfo() { FileName = file, DateTime = (GetFileTimestamp(file)).ToString("dd.MM.yyyy H:mm:ss"), FileSize = GetFileSize(file) / 1000.0f });
+                        i++;
+                    }
+
+                    if (extension == ".204")
+                    {
+                        tempresultfiles.Add(file);
+                        j++;
                     }
                 }
 
 
+                foreach (string item in tempresultfiles)
+                {
+                    if(!resultfilesdir.Contains(item))
+                    {
+                        resultfiles.Add(item);
+                    }
+                }
+
+                Dispatcher.BeginInvoke(new Action(() => сurrentf_label.Content = "Чтение каталога: root/out/ | Статус: Операция завершена"));
 
 
                 Dispatcher.BeginInvoke(new Action(() => dataGrid.ItemsSource = items));
+
+                Dispatcher.BeginInvoke(new Action(() => getfiles_button.IsEnabled = true));
+                Dispatcher.BeginInvoke(new Action(() => dataGrid.IsEnabled = true));
+                Dispatcher.BeginInvoke(new Action(() => getfilelist.IsEnabled = true));
+
+                MessageBox.Show("Операция завершена", "Системное сообщение");
+            }
+
+            else
+            {
+                MessageBox.Show("Нет файлов для загрузки","Системное сообщение");
             }
         }
 
@@ -355,27 +524,39 @@ namespace ERIP_FTP_Transfer
         private void getfiles_button_Click(object sender, RoutedEventArgs e)
         {
 
-            getfiles_button.IsEnabled = false;
-            getfilelist.IsEnabled = false;
 
             List<FTPFileInfo> items = dataGrid.SelectedItems.Cast<FTPFileInfo>().ToList();
 
-            string[] files = new string[items.Count];
 
-            int i = 0;
-            foreach (FTPFileInfo item in items)
+
+            if (resultfiles.Count > 0)
             {
-                files[i] = item.FileName;
-                i++;
+                Thread resultthreads = new Thread(() => downloadResultfiles(resultfiles.ToArray()));
+
+                resultthreads.Start();
             }
 
-            Thread threads1 = new Thread(() => downloadfiles(files));
+            if (items.Count > 0)
+            { 
+                getfiles_button.IsEnabled = false;
+                getfilelist.IsEnabled = false;
 
-            threads1.Start();
+                string[] files = new string[items.Count];
 
-            Thread th2 = new Thread(
-                new ThreadStart(() =>
+                int i = 0;
+                foreach (FTPFileInfo item in items)
                 {
+                    files[i]= item.FileName;
+                    i++;
+                }
+
+                Thread threads1 = new Thread(() => downloadfiles(files));
+
+                threads1.Start();
+
+                Thread th2 = new Thread(
+                    new ThreadStart(() =>
+                    {
                         while (bIsDownloading)
                         {
                             Thread.Sleep(50);
@@ -383,86 +564,65 @@ namespace ERIP_FTP_Transfer
                             Dispatcher.BeginInvoke(new Action(() => progressfilestatus.Value = filestatus));
                         }
 
-                }
-             ));
-            th2.Start();
-
-
-            Thread th3 = new Thread(
-                new ThreadStart(() =>
-                {
-                    while (bIsDownloading)
-                    {
-                        Thread.Sleep(50);
-
-                        Dispatcher.BeginInvoke(new Action(() => statusfile.Content = (fileindex.ToString()) + "/" + (filescount).ToString() + "  Скачивается файл: " + CurrentDownloadingFile));
                     }
-
-                    Thread.Sleep(50);
-                    Dispatcher.BeginInvoke(new Action(() => statusfile.Content = (fileindex) + "/" + (filescount).ToString() + "  Все файлы загружены"));
-
-                }
-             ));
-             th3.Start();
+                 ));
+                th2.Start();
 
 
-            Thread th4 = new Thread(
-                new ThreadStart(() =>
-                {
-                    while (bIsDownloading)
+                Thread th3 = new Thread(
+                    new ThreadStart(() =>
                     {
-                        Thread.Sleep(50);
-                        Dispatcher.BeginInvoke(new Action(() => getfilelist.IsEnabled = false));
+                        while (bIsDownloading)
+                        {
+                            Thread.Sleep(50);
+
+                            Dispatcher.BeginInvoke(new Action(() => statusfile.Content = (fileindex.ToString()) + "/" + (filescount).ToString() + "  Скачивается файл: " + CurrentDownloadingFile));
+                        }
 
                         Thread.Sleep(50);
-                        Dispatcher.BeginInvoke(new Action(() => getfiles_button.IsEnabled = false));
-
-                        Thread.Sleep(50);
-                        Dispatcher.BeginInvoke(new Action(() => statusoperation.Content = ""));
+                        Dispatcher.BeginInvoke(new Action(() => statusfile.Content = (fileindex) + "/" + (filescount).ToString() + "  Все файлы загружены"));
 
                     }
-
-                    Thread.Sleep(50);
-                    Dispatcher.BeginInvoke(new Action(() => getfilelist.IsEnabled = true));
-
-                    Thread.Sleep(50);
-                    Dispatcher.BeginInvoke(new Action(() => getfiles_button.IsEnabled = true));
-
-                    Thread.Sleep(50);
-                    Dispatcher.BeginInvoke(new Action(() => statusoperation.Content = "Операция завершена"));
-
-                }
-             ));
-             th4.Start();
-
-        }
-
-        private void dataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
-        {
-
-            string[] incompfiles = Directory.GetFiles(Properties.Settings.Default.workingpath+Properties.Settings.Default.archivepath+Properties.Settings.Default.outPath);
-
-            string[] gettingfiles = new string[incompfiles.Count()];
+                 ));
+                th3.Start();
 
 
-            int i = 0;
-            foreach (string compfile in incompfiles)
-            {
-                FileInfo file = new FileInfo(compfile);
+                Thread th4 = new Thread(
+                    new ThreadStart(() =>
+                    {
+                        while (bIsDownloading)
+                        {
+                            Thread.Sleep(50);
+                            Dispatcher.BeginInvoke(new Action(() => getfilelist.IsEnabled = false));
 
-                gettingfiles[i] = file.Name;
-                i++;
+                            Thread.Sleep(50);
+                            Dispatcher.BeginInvoke(new Action(() => getfiles_button.IsEnabled = false));
+
+                            Thread.Sleep(50);
+                            Dispatcher.BeginInvoke(new Action(() => statusoperation.Content = ""));
+
+                        }
+
+                        Thread.Sleep(50);
+                        Dispatcher.BeginInvoke(new Action(() => getfilelist.IsEnabled = true));
+
+                        Thread.Sleep(50);
+                        Dispatcher.BeginInvoke(new Action(() => getfiles_button.IsEnabled = true));
+
+                        Thread.Sleep(50);
+                        Dispatcher.BeginInvoke(new Action(() => statusoperation.Content = "Операция завершена"));
+
+                    }
+                 ));
+                th4.Start();
 
             }
 
-            DataGridRow row = e.Row;
-
-            FTPFileInfo RowDataContaxt = e.Row.DataContext as FTPFileInfo;
-            if (RowDataContaxt != null)
+            else
             {
-                if (!gettingfiles.Contains(RowDataContaxt.FileName))
-                    e.Row.Background = Brushes.LightGreen;
+                MessageBox.Show("Не выбраны файлы для загрузки", "Системное сообщение");
             }
+
         }
 
         private void menubut_exit_Click(object sender, RoutedEventArgs e)
@@ -479,11 +639,32 @@ namespace ERIP_FTP_Transfer
             settings_wnd.ShowDialog();
         }
 
-        private void getlist_by_date_but_Click(object sender, RoutedEventArgs e)
+        private void generatefiles_but_Click(object sender, RoutedEventArgs e)
         {
-            SelectDateForm selectdate_wnd = new SelectDateForm();
+            Random numbers = new Random();
 
-            selectdate_wnd.ShowDialog();
+            FileStream fileopen = new FileStream(workingpath + @"\test.txt",FileMode.Open);
+
+            byte[] bytes = new byte[fileopen.Length];
+
+            fileopen.Read(bytes,0,(int)fileopen.Length);
+
+            for (int i = 0; i < 30; i++)
+            {
+                string name = "";
+
+                for (int j = 0; j < 8; j++)
+                {
+                    name += numbers.Next(0, 9);
+                }
+
+                FileStream file = new FileStream(workingpath + @"\temp\" + name + ".210",FileMode.Create);
+
+                file.Write(bytes,0,bytes.Length);
+                file.Flush();
+                file.Close();
+            }
+
         }
     }
 }

@@ -29,6 +29,7 @@
                     <Label x:Name="label7" Content="к имени этой папки в конце буду добавлены префиксы (in и out)" HorizontalAlignment="Left" Margin="104,110,0,0" VerticalAlignment="Top" FontSize="9"/>
                     <CheckBox x:Name="mode_box" Content="Пассивный режим" HorizontalAlignment="Left" Margin="104,10,0,0" VerticalAlignment="Top"/>
                     <Label x:Name="label7_Copy" Content="если папка не существует, то она будет создана" HorizontalAlignment="Left" Margin="104,56,0,0" VerticalAlignment="Top" FontSize="9"/>
+                    <CheckBox x:Name="delete_box" Content="Удалять файлы с сервера после копирования" HorizontalAlignment="Left" Margin="104,136,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Кодировка" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="110">
